@@ -62,6 +62,8 @@ def scraping_parameters(data: list = None) -> list:
             }
             if i['filename'] is None:
                 i['filename'] = os.path.basename(urlparse(k).path)
+            if i['filename'] in ['', ]:
+                i['filename'] = 'index.html'
             fixext = (v if v is not None else {}).get('fixext', None)
             if fixext is not None:
                 i['filename'] = os.path.splitext(i['filename'])[0] + "." + fixext
@@ -153,8 +155,8 @@ def scraping_loading(directory: str = './out', data: list = None) -> str:
     for item in data:
         for k, v in item.items():
             v['loading'] = send_data_to_file(
-                filename=os.path.join(directory, k),
-                data=v['transformation result'])
+                filename=os.path.join(directory, v['filename']),
+                data="".join(v['transformation result']))
     if len(data) > 0:
         return data
     return "Empty Zero"
